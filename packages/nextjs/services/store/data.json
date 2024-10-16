@@ -1,0 +1,26 @@
+{
+  "University": {
+    "address": "0x1234567890abcdef1234567890abcdef12345678",
+    "description": "For current students and recent graduates"
+  },
+  "HK": {
+    "address": "0xabcdef1234567890abcdef1234567890abcdef12",
+    "description": "Hackathon veterans with proven track records"
+  },
+  "Free Agent": {
+    "address": "0x7890abcdef1234567890abcdef1234567890abcd",
+    "description": "Independent developers looking to join a team"
+  },
+  "Professional": {
+    "address": "0x7890abcdef1234567890abcdef1234567890abcd",
+    "description": "Experienced developers from the industry"
+  },
+  "Tribe": {
+    "address": "0x7890abcdef1234567890abcdef1234567890abcd",
+    "description": "Established teams ready to tackle challenges"
+  },
+  "xPat": {
+    "address": "0x1234567890abcdef1234567890abcdef12345678",
+    "description": "International participants bringing global perspectives"
+  }
+}

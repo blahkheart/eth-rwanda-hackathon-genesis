@@ -4,6 +4,817 @@
  */
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
-const deployedContracts = {} as const;
+const deployedContracts = {
+  31337: {
+    ETHRwandaHackathonGenesisRegistry: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      abi: [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "OwnableInvalidOwner",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "OwnableUnauthorizedAccount",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "email",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "number",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "class",
+              type: "address",
+            },
+          ],
+          name: "HackerDataEdited",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "email",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "number",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "class",
+              type: "address",
+            },
+          ],
+          name: "HackerRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "previousOwner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "OwnershipTransferred",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "VERSION",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_lockAddress",
+              type: "address",
+            },
+          ],
+          name: "editHackerData",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllHackers",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "email",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "number",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+              ],
+              internalType:
+                "struct ETHRwandaHackathonGenesisRegistry.HackerData[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "userAddress",
+              type: "address",
+            },
+          ],
+          name: "getHackerDataByAddress",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "email",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "number",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+              ],
+              internalType:
+                "struct ETHRwandaHackathonGenesisRegistry.HackerData",
+              name: "user",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_phone",
+              type: "uint256",
+            },
+          ],
+          name: "getHackerDataByPhone",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "email",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "number",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+              ],
+              internalType:
+                "struct ETHRwandaHackathonGenesisRegistry.HackerData",
+              name: "user",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+          ],
+          name: "isHackerRegistered",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_lockAddress",
+              type: "address",
+            },
+          ],
+          name: "registerHacker",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "renounceOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "transferOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "withdraw",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+  421614: {
+    ETHRwandaHackathonGenesisRegistry: {
+      address: "0x3882d10921fdb2B46FEEa5e745f6dc0819E34399",
+      abi: [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "OwnableInvalidOwner",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "OwnableUnauthorizedAccount",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "email",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "number",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "class",
+              type: "address",
+            },
+          ],
+          name: "HackerDataEdited",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "email",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "number",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "class",
+              type: "address",
+            },
+          ],
+          name: "HackerRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "previousOwner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "OwnershipTransferred",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "VERSION",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_lockAddress",
+              type: "address",
+            },
+          ],
+          name: "editHackerData",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllHackers",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "email",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "number",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+              ],
+              internalType:
+                "struct ETHRwandaHackathonGenesisRegistry.HackerData[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "userAddress",
+              type: "address",
+            },
+          ],
+          name: "getHackerDataByAddress",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "email",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "number",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+              ],
+              internalType:
+                "struct ETHRwandaHackathonGenesisRegistry.HackerData",
+              name: "user",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_phone",
+              type: "uint256",
+            },
+          ],
+          name: "getHackerDataByPhone",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "email",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "number",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+              ],
+              internalType:
+                "struct ETHRwandaHackathonGenesisRegistry.HackerData",
+              name: "user",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+          ],
+          name: "isHackerRegistered",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_lockAddress",
+              type: "address",
+            },
+          ],
+          name: "registerHacker",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "renounceOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "transferOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "withdraw",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+} as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;

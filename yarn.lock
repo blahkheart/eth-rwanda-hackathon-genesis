@@ -768,6 +768,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^3.9.0":
+  version: 3.9.0
+  resolution: "@hookform/resolvers@npm:3.9.0"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 64a1e77ea2eeeba521ec624f2cea33ec2d20c60de12847b59520393780a9c8b92b3d76b7b3eeabadef85e8c776826f7bc9016fa90a890580c4ed75503c060dd1
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.10.5":
   version: 0.10.7
   resolution: "@humanwhocodes/config-array@npm:0.10.7"
@@ -2112,16 +2121,19 @@ __metadata:
   resolution: "@se-2/nextjs@workspace:packages/nextjs"
   dependencies:
     "@heroicons/react": ~2.1.5
+    "@hookform/resolvers": ^3.9.0
     "@rainbow-me/rainbowkit": 2.1.6
     "@tanstack/react-query": ~5.28.6
     "@trivago/prettier-plugin-sort-imports": ~4.1.1
     "@types/node": ~18.19.50
     "@types/react": ~18.3.5
+    "@types/react-google-recaptcha": ^2.1.9
     "@typescript-eslint/eslint-plugin": ~5.40.0
     "@uniswap/sdk-core": ~4.0.1
     "@uniswap/v2-sdk": ~3.0.1
     abitype: 1.0.6
     autoprefixer: ~10.4.20
+    axios: ^1.7.7
     blo: ~1.0.1
     burner-connector: ~0.0.8
     daisyui: 4.12.10
@@ -2129,8 +2141,10 @@ __metadata:
     eslint-config-next: ~14.0.4
     eslint-config-prettier: ~8.5.0
     eslint-plugin-prettier: ~4.2.1
+    ethers: ^6.13.4
     next: ~14.2.11
     next-nprogress-bar: ~2.3.13
+    next-safe-action: ^7.9.4
     next-themes: ~0.3.0
     postcss: ~8.4.45
     prettier: ~2.8.4
@@ -2138,6 +2152,8 @@ __metadata:
     react: ~18.3.1
     react-copy-to-clipboard: ~5.1.0
     react-dom: ~18.3.1
+    react-google-recaptcha: ^3.1.0
+    react-hook-form: ^7.53.0
     react-hot-toast: ~2.4.0
     tailwindcss: ~3.4.11
     type-fest: ~4.6.0
@@ -2147,6 +2163,7 @@ __metadata:
     vercel: ~37.4.2
     viem: 2.21.7
     wagmi: 2.12.11
+    zod: ^3.23.8
     zustand: ~4.1.2
   languageName: unknown
   linkType: soft
@@ -2753,7 +2770,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:~18.3.5":
+"@types/react-google-recaptcha@npm:^2.1.9":
+  version: 2.1.9
+  resolution: "@types/react-google-recaptcha@npm:2.1.9"
+  dependencies:
+    "@types/react": "*"
+  checksum: 5a90bb50fe0a49f2e2ceb7950859cfdbe019aa0a75261451fb50ad83dcd4aa360a1941ab6c9b3c627f2b7a0dab2c6c09d6297469d3d4d02ebaf36b3fc34429b6
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:*, @types/react@npm:~18.3.5":
   version: 18.3.11
   resolution: "@types/react@npm:18.3.11"
   dependencies:
@@ -4416,7 +4442,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.7":
+"axios@npm:^1.6.7, axios@npm:^1.7.7":
   version: 1.7.7
   resolution: "axios@npm:1.7.7"
   dependencies:
@@ -7010,7 +7036,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:~6.13.2":
+"ethers@npm:^6.13.4, ethers@npm:~6.13.2":
   version: 6.13.4
   resolution: "ethers@npm:6.13.4"
   dependencies:
@@ -8206,6 +8232,15 @@ __metadata:
     minimalistic-assert: ^1.0.0
     minimalistic-crypto-utils: ^1.0.1
   checksum: bd30b6a68d7f22d63f10e1888aee497d7c2c5c0bb469e66bbdac99f143904d1dfe95f8131f95b3e86c86dd239963c9d972fcbe147e7cffa00e55d18585c43fe0
+  languageName: node
+  linkType: hard
+
+"hoist-non-react-statics@npm:^3.3.0":
+  version: 3.3.2
+  resolution: "hoist-non-react-statics@npm:3.3.2"
+  dependencies:
+    react-is: ^16.7.0
+  checksum: b1538270429b13901ee586aa44f4cc3ecd8831c061d06cb8322e50ea17b3f5ce4d0e2e66394761e6c8e152cd8c34fb3b4b690116c6ce2bd45b18c746516cb9e8
   languageName: node
   linkType: hard
 
@@ -10041,6 +10076,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-safe-action@npm:^7.9.4":
+  version: 7.9.4
+  resolution: "next-safe-action@npm:7.9.4"
+  peerDependencies:
+    "@sinclair/typebox": ">= 0.33.3"
+    next: ">= 14.0.0"
+    react: ">= 18.2.0"
+    react-dom: ">= 18.2.0"
+    valibot: ">= 0.36.0"
+    yup: ">= 1.0.0"
+    zod: ">= 3.0.0"
+  peerDependenciesMeta:
+    "@sinclair/typebox":
+      optional: true
+    valibot:
+      optional: true
+    yup:
+      optional: true
+    zod:
+      optional: true
+  checksum: ee86e1f0e227f99de392af74f6ed8911c369e2b64ae94f799452859d282b26cfc6edb1bceaccfb5895454c845f1db1f560917fc4749d2a8c79370101dabdc3b3
+  languageName: node
+  linkType: hard
+
 "next-themes@npm:~0.3.0":
   version: 0.3.0
   resolution: "next-themes@npm:0.3.0"
@@ -11141,7 +11200,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.0, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -11319,6 +11378,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-async-script@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "react-async-script@npm:1.2.0"
+  dependencies:
+    hoist-non-react-statics: ^3.3.0
+    prop-types: ^15.5.0
+  peerDependencies:
+    react: ">=16.4.1"
+  checksum: 303890eeaf9e18d59fca77f9c891bf3b52d2ec9ea88f0af9d19c160a1f101b447c5104ca46e2dd84c19de756d4797f1f054d041b888a3d57204d9145f4b1b532
+  languageName: node
+  linkType: hard
+
 "react-copy-to-clipboard@npm:~5.1.0":
   version: 5.1.0
   resolution: "react-copy-to-clipboard@npm:5.1.0"
@@ -11343,6 +11414,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-google-recaptcha@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "react-google-recaptcha@npm:3.1.0"
+  dependencies:
+    prop-types: ^15.5.0
+    react-async-script: ^1.2.0
+  peerDependencies:
+    react: ">=16.4.1"
+  checksum: 9dc64daf9684d979b1f66d97e00a42c9ceaa9b9fe8b29c4d02d77edf86781e2008f2ae1bef14509351ff3b2ffbcc26463f0d88dd612d7280b455b8c07101e663
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.53.0":
+  version: 7.53.0
+  resolution: "react-hook-form@npm:7.53.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18 || ^19
+  checksum: 84d67fb79bad03d0aa809b5e411d97fb081fc13cd2b6d063a988f81f6fbef8545463e05360afa9d8d58fff19f08fa919930dcdc98a9e68bf74048c9f63e10ad5
+  languageName: node
+  linkType: hard
+
 "react-hot-toast@npm:~2.4.0":
   version: 2.4.1
   resolution: "react-hot-toast@npm:2.4.1"
@@ -11355,7 +11447,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.13.1":
+"react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
@@ -14445,6 +14537,13 @@ __metadata:
   peerDependencies:
     ethers: ~5.7.0
   checksum: bbad1d48889e6fe03596982bdbdf56024df4024b2ac7713d0c4e63b143eee2bd4a825f98ce131732b22594d3901affddf1d4b863f70f0573dfec86e816eb995e
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.23.8":
+  version: 3.23.8
+  resolution: "zod@npm:3.23.8"
+  checksum: 15949ff82118f59c893dacd9d3c766d02b6fa2e71cf474d5aa888570c469dbf5446ac5ad562bb035bf7ac9650da94f290655c194f4a6de3e766f43febd432c5c
   languageName: node
   linkType: hard
 

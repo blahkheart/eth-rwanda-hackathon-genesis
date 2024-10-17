@@ -68,7 +68,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
         setFormErrors(formattedErrors);
       }
     } finally {
-      handleClose();
+      !formErrors && handleClose();
     }
   };
 

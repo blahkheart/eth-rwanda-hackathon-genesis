@@ -6,7 +6,7 @@ export function JumbotronSection() {
     >
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 text-center text-white">
-        <h1 className="text-6xl font-bold mb-4">ETH RWANDA HACKATHON</h1>
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">ETH RWANDA HACKATHON</h1>
         <p className="text-2xl mb-8">GENESIS</p>
         <div className="flex justify-center space-x-8">
           {/* Ethereum Logo */}

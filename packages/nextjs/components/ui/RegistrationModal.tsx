@@ -75,6 +75,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   const handleClose = () => {
     setShowRegistrationStatus(false);
     onClose();
+    setFormErrors({});
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

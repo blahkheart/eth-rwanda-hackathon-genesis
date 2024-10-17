@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 import { z } from "zod";
 import { RegistrationStatus } from "~~/components/ui/RegistrationStatus";
@@ -48,9 +49,16 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
       registrationSchema.parse(formData);
       setFormErrors({});
       // Store user data in Zustand store
-      useGlobalState.getState().registerHacker({ ...formData, class: selectedClass });
+      useGlobalState
+        .getState()
+        .registerHacker({ ...formData, class: selectedClass, classNftAddress: lockAddress ?? zeroAddress });
       // Make API call
-      await submitRegistrationForm({ ...formData, class: selectedClass });
+      const response = await submitRegistrationForm({
+        ...formData,
+        class: selectedClass,
+        classNftAddress: lockAddress ?? zeroAddress,
+      });
+      console.log("Registration response:", response);
       setShowRegistrationStatus(true); // Show RegistrationStatus on successful registration
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -59,6 +67,8 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
         );
         setFormErrors(formattedErrors);
       }
+    } finally {
+      handleClose();
     }
   };
 
@@ -70,6 +80,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
+    setShowRegistrationStatus(false);
   };
 
   useEffect(() => {
@@ -86,6 +97,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
     phone: string;
     ethereumAddress?: string;
     class: string;
+    classNftAddress: string;
   }): Promise<void> {
     setLoading(true); // Set loading to true when the request starts
     try {
@@ -94,15 +106,16 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, classNftAddress: lockAddress }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to register");
       }
       const result = await response.json();
-      notification.success("✅ Registration Complete!"); // Show success notification
+      notification.success("Registration Complete!"); // Show success notification
       console.log("Registration successful:", result);
+      handleClose(); // Close the modal and reset the form
     } catch (error) {
       // const errorMessage = (error as Error).message; // Type assertion to Error
       notification.error("Registration successful! NFT request failed."); // Show error notification
@@ -139,7 +152,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                       clipRule="evenodd"
                     ></path>
                   </svg>

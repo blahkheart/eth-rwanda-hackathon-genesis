@@ -23,14 +23,14 @@ export const RegistrationStatus: React.FC<RegistrationStatusProps> = ({ email })
   return (
     <div role="alert" className="alert alert-warning my-8">
       <div className="flex items-center space-x-2">
-        {hacker.nftRequestPending && <ExclamationCircleIcon className="w-5 h-5 text-yellow-500" />}
+        {hacker.isNftMinted && <ExclamationCircleIcon className="w-5 h-5 text-yellow-500" />}
         <div className="flex flex-col">
           <div className="flex flex-col">
             <span>Hey👋</span>
-            {hacker.nftRequestPending && (
+            {!hacker.isNftMinted && (
               <span>
                 {" "}
-                Registration is Successful. <strong>NB: </strong>NFT request is pending.
+                Registration is Successful. <strong>⚠️ </strong>NFT minting is pending.
               </span>
             )}
           </div>

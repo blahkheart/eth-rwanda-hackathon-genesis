@@ -11,9 +11,11 @@ import { WagmiProvider } from "wagmi";
 import { Header } from "~~/components/Header";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
+import { useInitializeStore } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
+  useInitializeStore(); // Initialize zustand store with data from MongoDB
   useInitializeNativeCurrencyPrice();
 
   return (

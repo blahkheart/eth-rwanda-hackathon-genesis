@@ -25,6 +25,8 @@
     "burner-connector": "~0.0.8",
     "daisyui": "4.12.10",
     "ethers": "^6.13.4",
+    "mongodb": "^6.9.0",
+    "mongoose": "^8.7.1",
     "next": "~14.2.11",
     "next-nprogress-bar": "~2.3.13",
     "next-safe-action": "^7.9.4",

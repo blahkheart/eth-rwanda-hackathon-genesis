@@ -11,6 +11,7 @@
  */
 import classData from "./data.json";
 import create from "zustand";
+import { persist } from "zustand/middleware";
 import scaffoldConfig from "~~/scaffold.config";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
 
@@ -22,11 +23,12 @@ type ClassData = {
 };
 
 type HackerData = {
-  hackerAddress: string;
+  ethereumAddress: string;
   name: string;
   email: string;
-  number: number;
+  phone: string;
   class: string;
+  nftRequestPending?: boolean;
 };
 
 type GlobalState = {
@@ -48,28 +50,38 @@ type GlobalState = {
   editHackerData: (hackerAddress: string, updatedData: Partial<HackerData>) => void;
 };
 
-export const useGlobalState = create<GlobalState>(set => ({
-  classData,
-  selectedClass: null,
-  lockAddress: null,
-  setHackerClass: className => set({ selectedClass: className }),
-  setLockAddress: address => set({ lockAddress: address }),
-  nativeCurrency: {
-    price: 0,
-    isFetching: true,
-  },
-  setNativeCurrencyPrice: (newValue: number): void =>
-    set(state => ({ nativeCurrency: { ...state.nativeCurrency, price: newValue } })),
-  setIsNativeCurrencyFetching: (newValue: boolean): void =>
-    set(state => ({ nativeCurrency: { ...state.nativeCurrency, isFetching: newValue } })),
-  targetNetwork: scaffoldConfig.targetNetworks[0],
-  setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => set(() => ({ targetNetwork: newTargetNetwork })),
-  hackers: [],
-  registerHacker: (hacker: HackerData) => set(state => ({ hackers: [...state.hackers, hacker] })),
-  editHackerData: (hackerAddress: string, updatedData: Partial<HackerData>) =>
-    set(state => ({
-      hackers: state.hackers.map(hacker =>
-        hacker.hackerAddress === hackerAddress ? { ...hacker, ...updatedData } : hacker,
-      ),
-    })),
-}));
+export const useGlobalState = create<GlobalState>()(
+  persist(
+    set => ({
+      classData,
+      selectedClass: null,
+      lockAddress: null,
+      setHackerClass: className => set({ selectedClass: className }),
+      setLockAddress: address => set({ lockAddress: address }),
+      nativeCurrency: {
+        price: 0,
+        isFetching: true,
+      },
+      setNativeCurrencyPrice: (newValue: number): void =>
+        set(state => ({ nativeCurrency: { ...state.nativeCurrency, price: newValue } })),
+      setIsNativeCurrencyFetching: (newValue: boolean): void =>
+        set(state => ({ nativeCurrency: { ...state.nativeCurrency, isFetching: newValue } })),
+      targetNetwork: scaffoldConfig.targetNetworks[0],
+      setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => set(() => ({ targetNetwork: newTargetNetwork })),
+      hackers: [],
+      registerHacker: (hacker: HackerData) =>
+        set(state => ({
+          hackers: [...state.hackers, { ...hacker, nftRequestPending: true }],
+        })),
+      editHackerData: (hackerAddress: string, updatedData: Partial<HackerData>) =>
+        set(state => ({
+          hackers: state.hackers.map(hacker =>
+            hacker.ethereumAddress === hackerAddress ? { ...hacker, ...updatedData } : hacker,
+          ),
+        })),
+    }),
+    {
+      name: "global-state",
+    },
+  ),
+);

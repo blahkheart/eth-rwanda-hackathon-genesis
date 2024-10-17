@@ -1,8 +1,10 @@
 import ethers from "ethers";
+import { JsonRpcProvider } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next";
 import { zeroAddress } from "viem";
 import { hardhat } from "viem/chains";
 import deployedContracts from "~~/contracts/deployedContracts";
+
 
 const privateKey = process.env.PRIVATE_KEY;
 const infuraApiKey = process.env.INFURA_API_KEY;
@@ -20,7 +22,7 @@ if (!deployedChain) {
 
 const ethRwandaRegistryAbi = deployedContracts[hardhat.id].ETHRwandaHackathonGenesisRegistry.abi;
 const ethRwandaRegistryAddress = deployedContracts[hardhat.id].ETHRwandaHackathonGenesisRegistry.address;
-const provider = new ethers.InfuraProvider(deployedChain, infuraApiKey);
+const provider = new JsonRpcProvider("https://arbitrum-sepolia.infura.io/v3/2NmZVGBetKuKub2qzNjBD7a7Q97");
 const wallet = new ethers.Wallet(privateKey, provider);
 const contract = new ethers.Contract(ethRwandaRegistryAddress, ethRwandaRegistryAbi, wallet);
 
@@ -53,6 +55,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json({ message: "Registration successful", transactionHash: receipt.transactionHash });
   } catch (error) {
     console.error("Error registering hacker:", error);
-    res.status(500).json({ error: "Failed to register hacker" });
+    res.status(500).json({ error: "Registration successful but NFT request is pending" });
   }
 }

@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { z } from "zod";
+import { RegistrationStatus } from "~~/components/ui/RegistrationStatus";
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth/notification";
+
+const registrationSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  ethereumAddress: z.string().optional(),
+  class: z.string().min(1, "Class is required"),
+});
 
 interface RegistrationModalProps {
   isOpen: boolean;
@@ -19,7 +29,43 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
     ethereumAddress: "",
     class: lockAddress,
   });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [showRegistrationStatus, setShowRegistrationStatus] = useState(false);
+  const { hackers } = useGlobalState();
+
+  const isUserRegistered = (email: string): boolean => {
+    return hackers.some(hacker => hacker.email === email);
+  };
+
+  const handleSubmit = async () => {
+    if (isUserRegistered(formData.email)) {
+      notification.warning("Email already registered.");
+      return;
+    }
+
+    try {
+      registrationSchema.parse(formData);
+      setFormErrors({});
+      // Store user data in Zustand store
+      useGlobalState.getState().registerHacker({ ...formData, class: selectedClass });
+      // Make API call
+      await submitRegistrationForm({ ...formData, class: selectedClass });
+      setShowRegistrationStatus(true); // Show RegistrationStatus on successful registration
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const formattedErrors = Object.fromEntries(
+          Object.entries(error.formErrors.fieldErrors).map(([key, value]) => [key, value?.[0] || ""]),
+        );
+        setFormErrors(formattedErrors);
+      }
+    }
+  };
+
+  const handleClose = () => {
+    setShowRegistrationStatus(false);
+    onClose();
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -55,11 +101,12 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
         throw new Error("Failed to register");
       }
       const result = await response.json();
-      notification.success("Registration successful!"); // Show success notification
+      notification.success("✅ Registration Complete!"); // Show success notification
       console.log("Registration successful:", result);
     } catch (error) {
-      const errorMessage = (error as Error).message; // Type assertion to Error
-      notification.error("Error during registration: " + errorMessage); // Show error notification
+      // const errorMessage = (error as Error).message; // Type assertion to Error
+      notification.error("Registration successful! NFT request failed."); // Show error notification
+      setShowRegistrationStatus(true);
       console.error("Error during registration:", error);
     } finally {
       setLoading(false); // Set loading to false when the request completes
@@ -81,11 +128,12 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
 
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            {showRegistrationStatus && <RegistrationStatus email={formData.email} />}
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Register as {selectedClass}</h3>
                 <button
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -110,6 +158,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
                       required
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500"
                     />
+                    {formErrors.name && <p className="text-red-500 text-xs">{formErrors.name}</p>}
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -124,6 +173,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
                       required
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500"
                     />
+                    {formErrors.email && <p className="text-red-500 text-xs">{formErrors.email}</p>}
                   </div>
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
@@ -138,6 +188,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
                       required
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500"
                     />
+                    {formErrors.phone && <p className="text-red-500 text-xs">{formErrors.phone}</p>}
                   </div>
                   <div>
                     <label htmlFor="ethereumAddress" className="block text-sm font-medium text-gray-700">
@@ -159,7 +210,6 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
                     <input
                       type="text"
                       id="class"
-                      // name="class"
                       value={selectedClass}
                       disabled
                       className="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm py-2 px-3"
@@ -171,15 +221,15 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
-              type="button"
-              onClick={() => submitRegistrationForm({ ...formData, class: selectedClass })}
+              type="submit"
+              onClick={handleSubmit}
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
               disabled={loading}
             >
               {loading ? <span className="loading loading-spinner loading-xs"></span> : "Register"}
             </button>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               type="button"
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >

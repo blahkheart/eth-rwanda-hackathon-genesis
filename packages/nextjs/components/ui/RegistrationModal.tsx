@@ -102,7 +102,8 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   }): Promise<void> {
     setLoading(true); // Set loading to true when the request starts
     try {
-      const response = await fetch("/api/register", {
+      // const response = await fetch("/api/register", {
+      const response = await fetch("/api/rsvp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

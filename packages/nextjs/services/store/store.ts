@@ -19,6 +19,7 @@ import scaffoldConfig from "~~/scaffold.config";
 // import connectToDatabase from "~~/utils/connectToDatabase";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
 import loadHackersFromFile from "~~/utils/scaffold-eth/loadHackersDataFromFile";
+
 type ClassData = {
   [key: string]: {
     address: string;
@@ -106,7 +107,7 @@ export const useInitializeStore = () => {
           console.error("Loading hackers from file...");
           const hackers = await loadHackersFromFile();
           if (!hackers) {
-            throw new Error("Failed to fetch hackers from both API and file");
+            return console.error("Failed to fetch hackers from both API and file");
           }
           setHackers(hackers);
         }

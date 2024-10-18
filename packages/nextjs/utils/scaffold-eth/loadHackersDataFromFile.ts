@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 // import path from "path";
 import { HackerData } from "~~/services/store/store";
 
-const dataFilePath = "./services/store/saved/hackersData.json";
+const dataFilePath = "./services/store/saved/hackersData.json/";
 
 async function loadHackersFromFile(): Promise<HackerData[] | null> {
   try {

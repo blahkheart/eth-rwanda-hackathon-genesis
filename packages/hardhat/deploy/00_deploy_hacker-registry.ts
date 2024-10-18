@@ -21,6 +21,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   */
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
+  const dev = "0xCA7632327567796e51920F6b16373e92c7823854";
 
   await deploy("ETHRwandaHackathonGenesisRegistry", {
     from: deployer,
@@ -37,7 +38,8 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     "ETHRwandaHackathonGenesisRegistry",
     deployer,
   );
-  console.log("👋 Greetings from ETH Rwanda:", ethRwandaHackathonGenesisRegistry.address);
+  const tx = await ethRwandaHackathonGenesisRegistry.transferOwnership(dev);
+  console.log("👋 Transferred ETH Rwanda Registry Ownership:", tx.hash);
 };
 
 export default deployYourContract;

@@ -5,18 +5,66 @@
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
-  8453: {
-    ETHRwandaHackathonGenesisRegistry: {
-      address: "0xdBD8D571a96FCc7A4B468837937495446Bb069a5",
+  421614: {
+    ETHRwandaHackathonOnboard: {
+      address: "0x08D3aA2D1822262EBb2B52b2E7FaFd4d747f5590",
       abi: [
         {
-          inputs: [],
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_salt",
+              type: "bytes32",
+            },
+          ],
           stateMutability: "nonpayable",
           type: "constructor",
         },
         {
           inputs: [],
-          name: "InsufficientBalance",
+          name: "AlreadyInitialized",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ECDSAInvalidSignature",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "length",
+              type: "uint256",
+            },
+          ],
+          name: "ECDSAInvalidSignatureLength",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "s",
+              type: "bytes32",
+            },
+          ],
+          name: "ECDSAInvalidSignatureS",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidNonce",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidShortString",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "NotAddressOwner",
           type: "error",
         },
         {
@@ -43,12 +91,33 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "RegistrationsClosed",
+          name: "ReentrancyGuardReentrantCall",
           type: "error",
         },
         {
           inputs: [],
-          name: "TransferFailed",
+          name: "RegistrationsClosed",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "str",
+              type: "string",
+            },
+          ],
+          name: "StringTooLong",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "UnauthorizedAccess",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "UserAlreadyRegistered",
           type: "error",
         },
         {
@@ -63,8 +132,14 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "UserNotRegistered",
+          name: "UserNotInitialized",
           type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [],
+          name: "EIP712DomainChanged",
+          type: "event",
         },
         {
           anonymous: false,
@@ -77,6 +152,19 @@ const deployedContracts = {
             },
           ],
           name: "HackerDataEdited",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+          ],
+          name: "HackerInitialized",
           type: "event",
         },
         {
@@ -131,95 +219,8 @@ const deployedContracts = {
           type: "event",
         },
         {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "from",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "address",
-              name: "token",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "RwCollectibleTransfer",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "from",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
-          ],
-          name: "RwETHTransfer",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "from",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "to",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "address",
-              name: "token",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
-          ],
-          name: "RwTokenTransfer",
-          type: "event",
-        },
-        {
           inputs: [],
-          name: "VERSION",
+          name: "MAX_LOCKS",
           outputs: [
             {
               internalType: "uint256",
@@ -246,52 +247,6 @@ const deployedContracts = {
         {
           inputs: [
             {
-              components: [
-                {
-                  internalType: "address",
-                  name: "hackerAddress",
-                  type: "address",
-                },
-                {
-                  internalType: "string",
-                  name: "name",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "email",
-                  type: "string",
-                },
-                {
-                  internalType: "uint256",
-                  name: "number",
-                  type: "uint256",
-                },
-                {
-                  internalType: "address",
-                  name: "class",
-                  type: "address",
-                },
-              ],
-              internalType:
-                "struct ETHRwandaHackathonGenesisRegistry.HackerData[]",
-              name: "_hackers",
-              type: "tuple[]",
-            },
-          ],
-          name: "batchRegisterHackers",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "_hackerAddress",
-              type: "address",
-            },
-            {
               internalType: "string",
               name: "_name",
               type: "string",
@@ -306,15 +261,53 @@ const deployedContracts = {
               name: "_number",
               type: "uint256",
             },
-            {
-              internalType: "address",
-              name: "_lockAddress",
-              type: "address",
-            },
           ],
           name: "editHackerData",
           outputs: [],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "eip712Domain",
+          outputs: [
+            {
+              internalType: "bytes1",
+              name: "fields",
+              type: "bytes1",
+            },
+            {
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "version",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "chainId",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "verifyingContract",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "salt",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256[]",
+              name: "extensions",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -334,23 +327,27 @@ const deployedContracts = {
                   type: "string",
                 },
                 {
-                  internalType: "string",
+                  internalType: "bytes32",
                   name: "email",
-                  type: "string",
+                  type: "bytes32",
                 },
                 {
-                  internalType: "uint256",
+                  internalType: "bytes32",
                   name: "number",
-                  type: "uint256",
+                  type: "bytes32",
                 },
                 {
                   internalType: "address",
                   name: "class",
                   type: "address",
                 },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
               ],
-              internalType:
-                "struct ETHRwandaHackathonGenesisRegistry.HackerData[]",
+              internalType: "struct HackerData[]",
               name: "",
               type: "tuple[]",
             },
@@ -366,6 +363,108 @@ const deployedContracts = {
               internalType: "bool",
               name: "",
               type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+          ],
+          name: "getHackerByEmail",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "email",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "number",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct HackerData",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+          ],
+          name: "getHackerByPhone",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "email",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "number",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct HackerData",
+              name: "",
+              type: "tuple",
             },
           ],
           stateMutability: "view",
@@ -394,23 +493,27 @@ const deployedContracts = {
                   type: "string",
                 },
                 {
-                  internalType: "string",
+                  internalType: "bytes32",
                   name: "email",
-                  type: "string",
+                  type: "bytes32",
                 },
                 {
-                  internalType: "uint256",
+                  internalType: "bytes32",
                   name: "number",
-                  type: "uint256",
+                  type: "bytes32",
                 },
                 {
                   internalType: "address",
                   name: "class",
                   type: "address",
                 },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
               ],
-              internalType:
-                "struct ETHRwandaHackathonGenesisRegistry.HackerData",
+              internalType: "struct HackerData",
               name: "user",
               type: "tuple",
             },
@@ -421,45 +524,68 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+          ],
+          name: "getHackerNonce",
+          outputs: [
+            {
               internalType: "uint256",
-              name: "_phone",
+              name: "",
               type: "uint256",
             },
           ],
-          name: "getHackerDataByPhone",
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_ownerAddress",
+              type: "address",
+            },
+          ],
+          name: "getSalt",
           outputs: [
             {
-              components: [
-                {
-                  internalType: "address",
-                  name: "hackerAddress",
-                  type: "address",
-                },
-                {
-                  internalType: "string",
-                  name: "name",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "email",
-                  type: "string",
-                },
-                {
-                  internalType: "uint256",
-                  name: "number",
-                  type: "uint256",
-                },
-                {
-                  internalType: "address",
-                  name: "class",
-                  type: "address",
-                },
-              ],
-              internalType:
-                "struct ETHRwandaHackathonGenesisRegistry.HackerData",
-              name: "user",
-              type: "tuple",
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes",
+              name: "_signature",
+              type: "bytes",
+            },
+          ],
+          name: "initializeHackerProfile",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+          ],
+          name: "isHackerInitialized",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
             },
           ],
           stateMutability: "view",
@@ -540,24 +666,6 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "address payable",
-              name: "_to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "_amount",
-              type: "uint256",
-            },
-          ],
-          name: "sendEther",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
               internalType: "bool",
               name: "_areRegistrationsOpen",
               type: "bool",
@@ -571,45 +679,12 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "contract IERC20",
-              name: "_token",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "_to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "_amount",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "_salt",
+              type: "bytes32",
             },
           ],
-          name: "transferERC20",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "contract IERC721",
-              name: "_token",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "_to",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "_tokenId",
-              type: "uint256",
-            },
-          ],
-          name: "transferERC721",
+          name: "setSalt",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -623,13 +698,6 @@ const deployedContracts = {
             },
           ],
           name: "transferOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "withdraw",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",

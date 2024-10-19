@@ -24,7 +24,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const dev = "0xCA7632327567796e51920F6b16373e92c7823854";
   const salt = process.env.SALT;
 
-  await deploy("ETHRwandaHackathonGenesisRegistry", {
+  await deploy("ETHRwandaHackathonOnboard", {
     from: deployer,
     // Contract constructor arguments
     args: [salt],
@@ -36,7 +36,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
 
   // Get the deployed contract to interact with it after deploying.
   const ethRwandaHackathonGenesisRegistry = await hre.ethers.getContract<Contract>(
-    "ETHRwandaHackathonGenesisRegistry",
+    "ETHRwandaHackathonOnboard",
     deployer,
   );
   const tx = await ethRwandaHackathonGenesisRegistry.transferOwnership(dev);
@@ -47,4 +47,4 @@ export default deployYourContract;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["ETHRwandaHackathonGenesisRegistry"];
+deployYourContract.tags = ["ETHRwandaHackathonOnboard"];

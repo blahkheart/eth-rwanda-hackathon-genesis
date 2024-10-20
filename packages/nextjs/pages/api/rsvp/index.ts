@@ -6,10 +6,9 @@ import loadEnv from "~~/utils/helpers/loadEnv";
 import clientPromise from "~~/utils/mongodb";
 
 // Load the deployed contract's ABI and address
-const deployedChain = 421614;
-const ethRwandaRegistryAbi = (deployedContracts as any)[deployedChain].ETHRwandaHackathonOnboard.abi;
-const ethRwandaRegistryAddress = (deployedContracts as any)[deployedChain].ETHRwandaHackathonOnboard.address;
-const { privateKey, baseRpcUrl } = loadEnv();
+const { privateKey, baseRpcUrl, deployedChainId } = loadEnv();
+const ethRwandaRegistryAbi = (deployedContracts as any)[deployedChainId].ETHRwandaHackathonOnboard.abi;
+const ethRwandaRegistryAddress = (deployedContracts as any)[deployedChainId].ETHRwandaHackathonOnboard.address;
 
 const provider = new ethers.JsonRpcProvider(baseRpcUrl);
 const wallet = new ethers.Wallet(privateKey, provider);

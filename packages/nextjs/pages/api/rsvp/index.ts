@@ -9,9 +9,9 @@ import clientPromise from "~~/utils/mongodb";
 const deployedChain = 421614;
 const ethRwandaRegistryAbi = (deployedContracts as any)[deployedChain].ETHRwandaHackathonOnboard.abi;
 const ethRwandaRegistryAddress = (deployedContracts as any)[deployedChain].ETHRwandaHackathonOnboard.address;
-const { privateKey, arbitrumSepoliaRpcUrl } = loadEnv();
+const { privateKey, baseRpcUrl } = loadEnv();
 
-const provider = new ethers.JsonRpcProvider(arbitrumSepoliaRpcUrl);
+const provider = new ethers.JsonRpcProvider(baseRpcUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

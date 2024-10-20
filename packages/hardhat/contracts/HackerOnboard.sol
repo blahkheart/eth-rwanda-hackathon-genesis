@@ -37,6 +37,7 @@ error UnauthorizedAccess();
 error AlreadyInitialized(); 
 error NotAddressOwner();
 error InvalidNonce();
+error NoValidMembership();
 
 
 /// @title ETHRwanda Hackathon Registry
@@ -82,6 +83,12 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
         _;
     }
 
+    modifier membersOnly(address _user) {
+        bool hasAccess = getHasValidKey(_user);
+        if(!hasAccess) revert NoValidMembership();
+        _;
+    }
+
     function getHackerDataByAddress(address userAddress) external view returns (HackerData memory user) {
         return hackersByAddress[userAddress];
     }
@@ -98,8 +105,6 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
         return IPublicLockV14(membershipLock).getHasValidKey(_address);
     }
     function getAllHackers() external view returns (HackerData[] memory) {
-        bool hasAccess = getHasValidKey(msg.sender);
-        if (!hasAccess) revert UnauthorizedAccess();
         return users;
     }
     function getSalt() external view returns (bytes32) {
@@ -115,7 +120,7 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
         return bytes(hackersByPhone[numberHash].name).length != 0; 
     }
 
-     /// @notice Checks if email has been used to register a hacker.
+    /// @notice Checks if email has been used to register a hacker.
     /// @param _email The email to check.
     /// @return True if the email has been used to register a hacker, false otherwise.
     function getIsEmailRegistered(string memory _email) external view returns (bool) {
@@ -260,6 +265,7 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
         }
     }
 
+
     /// @notice Sends Ether to a specified address.
     /// @param _to The address to send Ether to.
     /// @param _amount The amount of Ether to send.
@@ -283,7 +289,7 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
     /// @param _token The ERC721 token contract.
     /// @param _to The address to transfer tokens to.
     /// @param _tokenId The ID of the token to transfer.
-    function transferERC721(IERC721 _token, address _to, uint256 _tokenId) external onlyInitialized {
+    function transferERC721(IERC721 _token, address _to, uint256 _tokenId) external membersOnly(msg.sender) {
         _token.safeTransferFrom(msg.sender, _to, _tokenId);
         emit RwCollectibleTransfer(msg.sender, _to, address(_token), _tokenId);
     }

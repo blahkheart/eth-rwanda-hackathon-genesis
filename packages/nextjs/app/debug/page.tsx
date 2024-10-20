@@ -1,5 +1,6 @@
 import { DebugContracts } from "./_components/DebugContracts";
 import type { NextPage } from "next";
+import InitializeHackerProfile from "~~/components/ui/InitProfileButton";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
@@ -13,6 +14,9 @@ const Debug: NextPage = () => {
       <DebugContracts />
       <div className="text-center mt-8 bg-secondary p-10">
         <h1 className="text-4xl my-0">Debug Contracts</h1>
+        <div>
+          <InitializeHackerProfile />
+        </div>
         <p className="text-neutral">
           You can debug & interact with your deployed contracts here.
           <br /> Check{" "}

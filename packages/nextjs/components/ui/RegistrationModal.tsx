@@ -7,7 +7,6 @@ import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadCo
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth/notification";
 
-
 const registrationSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
@@ -37,33 +36,31 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   const [showRegistrationStatus, setShowRegistrationStatus] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   // const { hackers } = useGlobalState();
-  const { data, isLoading, error } = useScaffoldReadContract({
+  const { data: isEmailRegistered, isLoading } = useScaffoldReadContract({
     contractName: "ETHRwandaHackathonOnboard",
-    functionName: "getHackerByEmail",
+    functionName: "getIsEmailRegistered",
     args: [formData.email],
     watch: true,
   });
 
-  const isUserRegistered = (_data: any): boolean => {
-    if (isLoading) {
-      // Optionally handle loading state
-      return false;
-    }
-
-    if (error) {
-      // Optionally handle error state
-      console.error("Error fetching hacker data:", error);
-      return false;
-    }
-
-    console.log("data::", _data);
-    // Check if data is returned and valid
-    return _data && _data.name !== "";
-  };
+  const { data: isNumberRegistered, isLoading: isNumberLoading } = useScaffoldReadContract({
+    contractName: "ETHRwandaHackathonOnboard",
+    functionName: "getIsNumberRegistered",
+    args: [formData.phone],
+    watch: true,
+  });
 
   const handleSubmit = async () => {
-    if (isUserRegistered(data)) {
+    if (isEmailRegistered) {
       notification.warning("Email already registered.");
+      return;
+    }
+    if (isNumberRegistered) {
+      notification.warning("Phone number already registered.");
+      return;
+    }
+    if (isLoading || isNumberLoading) {
+      notification.warning("Please wait while we verify your email and phone number.");
       return;
     }
 
@@ -124,7 +121,6 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   }): Promise<void> {
     setLoading(true); // Set loading to true when the request starts
     try {
-      // const response = await fetch("/api/register", {
       const response = await fetch("/api/rsvp", {
         method: "POST",
         headers: {
@@ -138,16 +134,15 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
       }
       const result = await response.json();
       setIsSuccess(true);
-      notification.success("Registration Complete!"); // Show success notification
+      notification.success(`${result.message} with transaction hash ${result.transactionHash}`);
       console.log("Registration successful:", result);
       handleClose(); // Close the modal and reset the form
     } catch (error) {
-      // const errorMessage = (error as Error).message; // Type assertion to Error
-      notification.error("Registration successful! NFT request failed."); // Show error notification
+      notification.error(`${(error as Error).message}`);
       setShowRegistrationStatus(true);
       console.error("Error during registration:", error);
     } finally {
-      setLoading(false); // Set loading to false when the request completes
+      setLoading(false);
     }
   }
 

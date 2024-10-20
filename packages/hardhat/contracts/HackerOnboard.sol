@@ -79,7 +79,7 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
 
     receive() external payable {}
 
-     modifier onlyInitialized() {
+    modifier onlyInitialized() {
         if (!hackersByAddress[msg.sender].initialized) revert UserNotInitialized();
         _;
     }
@@ -93,37 +93,34 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
     function getAreRegistrationsOpen() external view returns (bool) {
         return areRegistrationsOpen;
     }
-    function getIsWhitelisted(address _address) external view returns (bool) {
+    function getIsWhitelisted(address _address) public view returns (bool) {
         return whitelistedAddresses[_address];
     }
     function getAllHackers() external view returns (HackerData[] memory) {
-        bool hasAccess = false;
-
-        if (areRegistrationsOpen) {
-            for (uint256 i = 0; i < locks.length; i++) {
-                if (IPublicLockV14(locks[i]).getHasValidKey(msg.sender)) {
-                    hasAccess = true;
-                    break;
-                }
-            }
-        } else {
-            hasAccess = whitelistedAddresses[msg.sender];
-        }
-
+        bool hasAccess = getIsWhitelisted(msg.sender);
         if (!hasAccess) revert UnauthorizedAccess();
         return users;
     }
-    function getSalt() external onlyOwner view returns (bytes32) {
+    function getSalt() external view returns (bytes32) {
+        if(msg.sender != owner()) revert UnauthorizedAccess();
         return salt;
     }
 
     /// @notice Checks if a hacker is registered by phone number.
     /// @param _number The phone number to check.
     /// @return True if the hacker is registered, false otherwise.
-    function getIsHackerRegistered(uint256 _number) external view returns (bool) {
+    function getIsNumberRegistered(uint256 _number) external view returns (bool) {
         bytes32 numberHash = Utilities._hashNumber(_number, salt);
         return bytes(hackersByPhone[numberHash].name).length != 0; 
     }
+
+     /// @notice Checks if email has been used to register a hacker.
+    /// @param _email The email to check.
+    /// @return True if the email has been used to register a hacker, false otherwise.
+    function getIsEmailRegistered(string memory _email) external view returns (bool) {
+        bytes32 emailHash = Utilities._hashEmail(_email, salt);
+        return hackerEmailHashes[emailHash] != address(0);
+    } 
     
     /// @notice Checks if a hacker's profile is initialized.
     /// @param _hackerAddress The address of the hacker.
@@ -228,7 +225,7 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
         hackerEmailHashes[hackerData.email] = msg.sender;
         hackerNumberHashes[hackerData.number] = msg.sender;
 
-        hackerNonceByAddress[msg.sender] = currentNonce + 1; // Increment nonce after successful initialization
+        hackerNonceByAddress[msg.sender] = currentNonce; // Increment nonce after successful initialization
         hackerData.initialized = true;
 
         emit HackerInitialized(msg.sender);

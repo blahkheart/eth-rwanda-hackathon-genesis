@@ -11,7 +11,7 @@ const ethRwandaRegistryAbi = (deployedContracts as any)[deployedChain].ETHRwanda
 const ethRwandaRegistryAddress = (deployedContracts as any)[deployedChain].ETHRwandaHackathonOnboard.address;
 const { privateKey, arbitrumSepoliaRpcUrl } = loadEnv();
 
-const provider = new ethers.JsonRpcProvider(arbitrumSepoliaRpcUrl); 
+const provider = new ethers.JsonRpcProvider(arbitrumSepoliaRpcUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, email, phone, ethereumAddress, classNftAddress: hackerClass } = req.body;
+  const { name, email, phone, ethereumAddress, class: hackerClassName, classNftAddress: hackerClass } = req.body;
 
   if (!name || !email || !phone || !hackerClass) {
     return res.status(400).json({ error: "Missing required fields" });
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     email,
     phone,
     ethereumAddress: userAddress,
-    class: hackerClass,
+    class: hackerClassName,
     nftAddress: hackerClass,
     isNftMinted: false,
   };
@@ -67,6 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Respond with the transaction hash and the id
     res.status(200).json({ message: "Registration successful", transactionHash: receipt.transactionHash });
   } catch (error) {
+    console.log("ERR::REGISTERING HACKER ONCHAIN::", error);
     try {
       // save to mongodb
       const client = await clientPromise;
@@ -79,7 +80,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       // Respond with the id
-      res.status(201).json({ message: "On-chain profile pending, saved locally", id: result.insertedId });
+      res
+        .status(201)
+        .json({ message: "Onchain profile pending, registration saved successfully", id: result.insertedId });
     } catch (dbError) {
       // Respond with a database error
       res.status(500).json({ error: `Database Error: ${(dbError as Error).message}` });

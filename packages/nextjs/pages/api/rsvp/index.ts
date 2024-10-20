@@ -1,93 +1,18 @@
-// import { NextApiRequest, NextApiResponse } from "next";
-// import { createWalletClient, http, isAddress, zeroAddress } from "viem";
-// import { privateKeyToAccount } from "viem/accounts";
-// import { mainnet } from "viem/chains";
-// import deployedContracts from "~~/contracts/deployedContracts";
-// const privateKey = process.env.PRIVATE_KEY;
-// const infuraApiKey = process.env.INFURA_API_KEY;
-// const deployedChain = 8453;
-// if (!privateKey) {
-//   throw new Error("Missing environment variable PRIVATE_KEY");
-// }
-// if (!infuraApiKey) {
-//   throw new Error("Missing environment variable INFURA_API_KEY");
-// }
-// if (!deployedChain) {
-//   throw new Error("Missing environment variable DEPLOYED_CHAIN_ID");
-// }
-// const ethRwandaRegistryAbi = deployedContracts[deployedChain].ETHRwandaHackathonGenesisRegistry.abi;
-// const ethRwandaRegistryAddress = deployedContracts[deployedChain].ETHRwandaHackathonGenesisRegistry.address;
-// const account = privateKeyToAccount(privateKey);
-// const client = createWalletClient({
-//   account,
-//   chain: mainnet,
-//   transport: http(`https://base-mainnet.infura.io/v3/${infuraApiKey}`),
-// });
-// function isValidEthereumAddress(address: string): boolean {
-//   return isAddress(address);
-// }
-// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-//   if (req.method !== "POST") {
-//     return res.status(405).json({ error: "Method not allowed" });
-//   }
-//   const { name, email, phone, ethereumAddress, classNftAddress: hackerClass } = req.body;
-//   if (!name || !email || !phone || !hackerClass) {
-//     return res.status(400).json({ error: "Missing required fields" });
-//   }
-//   const userAddress = ethereumAddress !== "" ? ethereumAddress : zeroAddress;
-//   if (!isValidEthereumAddress(userAddress)) {
-//     return res.status(400).json({ error: "Invalid Ethereum address" });
-//   }
-//   try {
-//     const tx = await client.writeContract({
-//       address: ethRwandaRegistryAddress,
-//       abi: ethRwandaRegistryAbi, // Make sure to load the ABI
-//       functionName: "registerHacker",
-//       args: [userAddress, name, email, BigInt(phone), hackerClass],
-//     });
-//     res.status(200).json({ message: "Registration successful", transactionHash: tx });
-//   } catch (error) {
-//     console.error("Error registering hacker:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// }
 import { ethers } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next";
 import deployedContracts from "~~/contracts/deployedContracts";
-import { appendHackerDataToFile } from "~~/utils/scaffold-eth/appendHackerDataToFile";
-
-// Load environment variables
-const privateKey = process.env.PRIVATE_KEY;
-const infuraApiKey = process.env.INFURA_API_KEY;
-const deployedChain = 8453;
-
-if (!privateKey) {
-  throw new Error("Missing environment variable PRIVATE_KEY");
-}
-if (!infuraApiKey) {
-  throw new Error("Missing environment variable INFURA_API_KEY");
-}
-if (!deployedChain) {
-  throw new Error("Missing environment variable DEPLOYED_CHAIN_ID");
-}
+import { isValidEmail, isValidEthereumAddress, isValidPhoneNumber } from "~~/utils/helpers";
+import loadEnv from "~~/utils/helpers/loadEnv";
+import clientPromise from "~~/utils/mongodb";
 
 // Load the deployed contract's ABI and address
-const ethRwandaRegistryAbi = deployedContracts[deployedChain].ETHRwandaHackathonGenesisRegistry.abi;
-const ethRwandaRegistryAddress = deployedContracts[deployedChain].ETHRwandaHackathonGenesisRegistry.address;
+const deployedChain = 421614;
+const ethRwandaRegistryAbi = (deployedContracts as any)[deployedChain].ETHRwandaHackathonOnboard.abi;
+const ethRwandaRegistryAddress = (deployedContracts as any)[deployedChain].ETHRwandaHackathonOnboard.address;
+const { privateKey, arbitrumSepoliaRpcUrl } = loadEnv();
 
-// Create a provider and wallet
-const provider = new ethers.JsonRpcProvider(`https://base-mainnet.infura.io/v3/${infuraApiKey}`);
+const provider = new ethers.JsonRpcProvider(arbitrumSepoliaRpcUrl); 
 const wallet = new ethers.Wallet(privateKey, provider);
-
-// Utility function to validate Ethereum addresses
-function isValidEthereumAddress(address: string): boolean {
-  try {
-    ethers.getAddress(address); // Automatically throws if the address is invalid
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -108,6 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "Invalid Ethereum address" });
   }
 
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ error: "Invalid email" });
+  }
+
+  if (!isValidPhoneNumber(phone)) {
+    return res.status(400).json({ error: "Invalid phone number" });
+  }
+
   const hackerData = {
     name,
     email,
@@ -117,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     nftAddress: hackerClass,
     isNftMinted: false,
   };
+
   try {
     // Create a contract instance with the ABI, address, and wallet
     const ethRwandaRegistry = new ethers.Contract(ethRwandaRegistryAddress, ethRwandaRegistryAbi, wallet);
@@ -129,18 +63,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Wait for the transaction to be mined
     const receipt = await txResponse.wait();
-    appendHackerDataToFile(hackerData);
-    // Respond with the transaction hash
+
+    // Respond with the transaction hash and the id
     res.status(200).json({ message: "Registration successful", transactionHash: receipt.transactionHash });
   } catch (error) {
-    console.error("Error registering hacker:", error);
-    const isSuccess = appendHackerDataToFile(hackerData);
-    if (!isSuccess) {
-      res
-        .status(201)
-        .json({ message: "Registration successful. But failed to mint NFT, please contact the organizers" });
-    } else {
-      res.status(500).json({ error: "Internal Server Error" });
+    try {
+      // save to mongodb
+      const client = await clientPromise;
+      const db = client.db("eth-rwanda-hackathon");
+      const collection = db.collection("registrations");
+
+      const result = await collection.insertOne({
+        ...hackerData,
+        createdAt: new Date(),
+      });
+
+      // Respond with the id
+      res.status(201).json({ message: "On-chain profile pending, saved locally", id: result.insertedId });
+    } catch (dbError) {
+      // Respond with a database error
+      res.status(500).json({ error: `Database Error: ${(dbError as Error).message}` });
     }
   }
 }

@@ -5,6 +5,711 @@
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
+  31337: {
+    ETHRwandaHackathonOnboard: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_salt",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "AlreadyInitialized",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ECDSAInvalidSignature",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "length",
+              type: "uint256",
+            },
+          ],
+          name: "ECDSAInvalidSignatureLength",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "s",
+              type: "bytes32",
+            },
+          ],
+          name: "ECDSAInvalidSignatureS",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidNonce",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidShortString",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "NotAddressOwner",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "OwnableInvalidOwner",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "OwnableUnauthorizedAccount",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ReentrancyGuardReentrantCall",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "RegistrationsClosed",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "str",
+              type: "string",
+            },
+          ],
+          name: "StringTooLong",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "UnauthorizedAccess",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "UserAlreadyRegistered",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "UserAlreadyRegisteredWithEmail",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "UserAlreadyRegisteredWithPhone",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "UserNotInitialized",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [],
+          name: "EIP712DomainChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+          ],
+          name: "HackerDataEdited",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+          ],
+          name: "HackerInitialized",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "hackerAddress",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "class",
+              type: "address",
+            },
+          ],
+          name: "HackerRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "previousOwner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "OwnershipTransferred",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "isOpen",
+              type: "bool",
+            },
+          ],
+          name: "RegistrationStatusChanged",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "MAX_LOCKS",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "areRegistrationsOpen",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+          ],
+          name: "editHackerData",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "eip712Domain",
+          outputs: [
+            {
+              internalType: "bytes1",
+              name: "fields",
+              type: "bytes1",
+            },
+            {
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "version",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "chainId",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "verifyingContract",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "salt",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256[]",
+              name: "extensions",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllHackers",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "email",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "number",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct HackerData[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAreRegistrationsOpen",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+          ],
+          name: "getHackerByEmail",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "email",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "number",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct HackerData",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+          ],
+          name: "getHackerByPhone",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "email",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "number",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct HackerData",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "userAddress",
+              type: "address",
+            },
+          ],
+          name: "getHackerDataByAddress",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "hackerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "email",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "number",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "class",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "initialized",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct HackerData",
+              name: "user",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+          ],
+          name: "getHackerNonce",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_ownerAddress",
+              type: "address",
+            },
+          ],
+          name: "getSalt",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes",
+              name: "_signature",
+              type: "bytes",
+            },
+          ],
+          name: "initializeHackerProfile",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+          ],
+          name: "isHackerInitialized",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+          ],
+          name: "isHackerRegistered",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_hackerAddress",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "_number",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_lockAddress",
+              type: "address",
+            },
+          ],
+          name: "registerHacker",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "renounceOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bool",
+              name: "_areRegistrationsOpen",
+              type: "bool",
+            },
+          ],
+          name: "setRegistrationsStatus",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_salt",
+              type: "bytes32",
+            },
+          ],
+          name: "setSalt",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "transferOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
   421614: {
     ETHRwandaHackathonOnboard: {
       address: "0x08D3aA2D1822262EBb2B52b2E7FaFd4d747f5590",

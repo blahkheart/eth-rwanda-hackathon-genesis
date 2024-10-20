@@ -21,8 +21,12 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   */
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
-  const dev = "0xCA7632327567796e51920F6b16373e92c7823854";
+  const dev = "0xd443188B33a13A24F63AC3A49d54DB97cf64349A";
   const salt = process.env.SALT;
+
+  if (!salt) {
+    throw new Error("Missing SALT in .env");
+  }
 
   await deploy("ETHRwandaHackathonOnboard", {
     from: deployer,

@@ -14,11 +14,7 @@ import classData from "./data.json";
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import scaffoldConfig from "~~/scaffold.config";
-// import clientPromise from "~~/utils/mongodb";
-// import dbConnect from "~~/services/mongodb/dbConnect";
-// import connectToDatabase from "~~/utils/connectToDatabase";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
-import loadHackersFromFile from "~~/utils/scaffold-eth/loadHackersDataFromFile";
 
 type ClassData = {
   [key: string]: {
@@ -102,15 +98,6 @@ export const useInitializeStore = () => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/hackers");
-        if (!response.ok) {
-          console.error("Failed to fetch hackers from API");
-          console.error("Loading hackers from file...");
-          const hackers = await loadHackersFromFile();
-          if (!hackers) {
-            return console.error("Failed to fetch hackers from both API and file");
-          }
-          setHackers(hackers);
-        }
         const hackers = await response.json();
         const formattedHackers: HackerData[] = hackers.map((hacker: any) => ({
           ethereumAddress: hacker.ethereumAddress as string,

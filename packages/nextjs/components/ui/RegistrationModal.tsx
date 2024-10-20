@@ -3,8 +3,10 @@ import { zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 import { z } from "zod";
 import { RegistrationStatus } from "~~/components/ui/RegistrationStatus";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadContract";
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth/notification";
+
 
 const registrationSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -33,14 +35,34 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [showRegistrationStatus, setShowRegistrationStatus] = useState(false);
-  const { hackers } = useGlobalState();
+  const [isSuccess, setIsSuccess] = useState(false);
+  // const { hackers } = useGlobalState();
+  const { data, isLoading, error } = useScaffoldReadContract({
+    contractName: "ETHRwandaHackathonOnboard",
+    functionName: "getHackerByEmail",
+    args: [formData.email],
+    watch: true,
+  });
 
-  const isUserRegistered = (email: string): boolean => {
-    return hackers.some(hacker => hacker.email === email);
+  const isUserRegistered = (_data: any): boolean => {
+    if (isLoading) {
+      // Optionally handle loading state
+      return false;
+    }
+
+    if (error) {
+      // Optionally handle error state
+      console.error("Error fetching hacker data:", error);
+      return false;
+    }
+
+    console.log("data::", _data);
+    // Check if data is returned and valid
+    return _data && _data.name !== "";
   };
 
   const handleSubmit = async () => {
-    if (isUserRegistered(formData.email)) {
+    if (isUserRegistered(data)) {
       notification.warning("Email already registered.");
       return;
     }
@@ -115,6 +137,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
         throw new Error("Failed to register");
       }
       const result = await response.json();
+      setIsSuccess(true);
       notification.success("Registration Complete!"); // Show success notification
       console.log("Registration successful:", result);
       handleClose(); // Close the modal and reset the form
@@ -127,6 +150,14 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
       setLoading(false); // Set loading to false when the request completes
     }
   }
+
+  const handleRetry = async () => {
+    try {
+      await handleSubmit(); // Reuse the handleSubmit function to submit the form again
+    } catch (error) {
+      console.error("Error during retry:", error);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -143,7 +174,14 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
 
         <div className="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full mx-4  text-left">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            {showRegistrationStatus && <RegistrationStatus email={formData.email} />}
+            {showRegistrationStatus && (
+              <RegistrationStatus
+                isSuccess={isSuccess}
+                email={formData.email}
+                onClose={handleClose}
+                onRetry={handleRetry}
+              />
+            )}
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Register as {selectedClass}</h3>

@@ -9,19 +9,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./Utilities.sol"; // Adjust the path as necessary
 
-interface IPublicLockV14 {
- /**
-   * Checks if the user has a non-expired key.
-   * @param _user The address of the key owner
-   */
-  function getHasValidKey(address _user) external view returns (bool);
-}
-
 struct HackerData {
     address hackerAddress;
     string name;
     bytes32 email;
-    bytes32 number; // Phone number
+    bytes32 number;
     address class;
     bool initialized;
 }
@@ -52,7 +44,6 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
     bool public areRegistrationsOpen = false;
     string private constant SIGNING_DOMAIN = "ETHRwandaHackathon";
     string private constant SIGNATURE_VERSION = "1";
-    uint256 public constant MAX_LOCKS = 6;
 
     mapping(address => uint256) private hackerNonceByAddress;
     mapping(bytes32 => HackerData) private hackersByPhone;

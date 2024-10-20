@@ -3,9 +3,11 @@ import { zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 import { z } from "zod";
 import { RegistrationStatus } from "~~/components/ui/RegistrationStatus";
+import { useIsEmailRegistered, useIsPhoneNumberRegistered } from "~~/hooks/eth-rwanda-onboard";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadContract";
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth/notification";
+
 
 const registrationSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -23,7 +25,7 @@ interface RegistrationModalProps {
 
 export function RegistrationModal({ isOpen, onClose, selectedClass }: RegistrationModalProps) {
   const { address: connectedAddress } = useAccount();
-  const { lockAddress } = useGlobalState();
+  const { lockAddress, hackers } = useGlobalState();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,7 +37,9 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   const [loading, setLoading] = useState(false);
   const [showRegistrationStatus, setShowRegistrationStatus] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  // const { hackers } = useGlobalState();
+  const isRegistrationWithEmailSaved = useIsEmailRegistered(hackers, formData.email);
+  const isRegistrationWithNumberSaved = useIsPhoneNumberRegistered(hackers, formData.phone);
+
   const { data: isEmailRegistered, isLoading } = useScaffoldReadContract({
     contractName: "ETHRwandaHackathonOnboard",
     functionName: "getIsEmailRegistered",
@@ -51,11 +55,11 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   });
 
   const handleSubmit = async () => {
-    if (isEmailRegistered) {
+    if (isEmailRegistered || isRegistrationWithEmailSaved) {
       notification.warning("Email already registered.");
       return;
     }
-    if (isNumberRegistered) {
+    if (isNumberRegistered || isRegistrationWithNumberSaved) {
       notification.warning("Phone number already registered.");
       return;
     }
@@ -78,7 +82,6 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
         classNftAddress: lockAddress ?? zeroAddress,
       });
       console.log("Registration response:", response);
-      setShowRegistrationStatus(true); // Show RegistrationStatus on successful registration
     } catch (error) {
       if (error instanceof z.ZodError) {
         const formattedErrors = Object.fromEntries(
@@ -134,8 +137,16 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
       }
       const result = await response.json();
       setIsSuccess(true);
-      notification.success(`${result.message} with transaction hash ${result.transactionHash}`);
+      notification.success(result.message);
       console.log("Registration successful:", result);
+      // clear form data
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        ethereumAddress: "",
+        class: lockAddress,
+      });
       handleClose(); // Close the modal and reset the form
     } catch (error) {
       notification.error(`${(error as Error).message}`);

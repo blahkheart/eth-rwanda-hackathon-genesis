@@ -25,7 +25,6 @@ function InitializeHackerProfile() {
     watch: true,
   });
 
-  console.log("hackerContract_Addy", hackerContract?.address);
   const domain = {
     name: "ETHRwandaHackathon",
     version: "1",

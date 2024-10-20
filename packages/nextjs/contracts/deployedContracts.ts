@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   421614: {
     ETHRwandaHackathonOnboard: {
-      address: "0x6a36A9F5aDF57655E8806bE5675C8c3Be55F92cF",
+      address: "0x0b19DA881924165886F9a4E3d4d5A754Dd73b139",
       abi: [
         {
           inputs: [
@@ -536,6 +536,25 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "string",
+              name: "_email",
+              type: "string",
+            },
+          ],
+          name: "getIsEmailRegistered",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "_hackerAddress",
               type: "address",
@@ -560,7 +579,7 @@ const deployedContracts = {
               type: "uint256",
             },
           ],
-          name: "getIsHackerRegistered",
+          name: "getIsNumberRegistered",
           outputs: [
             {
               internalType: "bool",

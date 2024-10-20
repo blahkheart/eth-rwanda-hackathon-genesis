@@ -63,9 +63,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Wait for the transaction to be mined
     const receipt = await txResponse.wait();
-
+    console.log("receipt", receipt);
     // Respond with the transaction hash and the id
-    res.status(200).json({ message: "Registration successful", transactionHash: receipt.transactionHash });
+    res.status(200).json({
+      message: `Registration successful with transaction hash: ${receipt.hash}`,
+      transactionHash: receipt.transactionHash,
+    });
   } catch (error) {
     console.log("ERR::REGISTERING HACKER ONCHAIN::", error);
     try {
@@ -80,9 +83,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       // Respond with the id
-      res
-        .status(201)
-        .json({ message: "Onchain profile pending, registration saved successfully", id: result.insertedId });
+      res.status(201).json({
+        message: `Onchain profile pending, registration saved successfully with id: ${result.insertedId}`,
+        id: result.insertedId,
+      });
     } catch (dbError) {
       // Respond with a database error
       res.status(500).json({ error: `Database Error: ${(dbError as Error).message}` });

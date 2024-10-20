@@ -7,7 +7,13 @@ import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "./Utilities.sol"; // Adjust the path as necessary
+import "./Utilities.sol";
+
+/// @title PublicLockV14 interface
+/// @notice Interface for the PublicLockV14 contract
+interface IPublicLockV14 {
+    function getHasValidKey(address _user) external view returns (bool); 
+}
 
 struct HackerData {
     address hackerAddress;
@@ -42,6 +48,7 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
     uint256 private nonce;
     bytes32 private salt;
     bool public areRegistrationsOpen = false;
+    uint256 public constant MAX_LOCKS = 6;
     string private constant SIGNING_DOMAIN = "ETHRwandaHackathon";
     string private constant SIGNATURE_VERSION = "1";
 
@@ -50,7 +57,7 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
     mapping(address => HackerData) private hackersByAddress;
     mapping(bytes32 => address) private hackerEmailHashes;
     mapping(bytes32 => address) private hackerNumberHashes;
-    mapping(address => bool) private whitelistedAddresses;
+    address private membershipLock;
 
     HackerData[] private users;
     address[] private locks;
@@ -84,11 +91,14 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
     function getAreRegistrationsOpen() external view returns (bool) {
         return areRegistrationsOpen;
     }
-    function getIsWhitelisted(address _address) public view returns (bool) {
-        return whitelistedAddresses[_address];
+    function getMembershipContractAddress() external view returns (address) {
+        return membershipLock;
+    }
+    function getHasValidKey(address _address) public view returns (bool) {
+        return IPublicLockV14(membershipLock).getHasValidKey(_address);
     }
     function getAllHackers() external view returns (HackerData[] memory) {
-        bool hasAccess = getIsWhitelisted(msg.sender);
+        bool hasAccess = getHasValidKey(msg.sender);
         if (!hasAccess) revert UnauthorizedAccess();
         return users;
     }
@@ -120,8 +130,8 @@ contract ETHRwandaHackathonOnboard is Ownable, ReentrancyGuard, EIP712 {
         return hackersByAddress[_hackerAddress].initialized;
     }
 
-    function setIsWhitelisted(address _address, bool _isWhitelisted) external onlyOwner {
-        whitelistedAddresses[_address] = _isWhitelisted;
+    function setMembershipLock(address _address) external onlyOwner {
+        membershipLock = _address;
     }
     function setRegistrationsStatus(bool _areRegistrationsOpen) external onlyOwner {
         areRegistrationsOpen = _areRegistrationsOpen;

@@ -8,7 +8,6 @@ import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadCo
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth/notification";
 
-
 const registrationSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
@@ -50,7 +49,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   const { data: isNumberRegistered, isLoading: isNumberLoading } = useScaffoldReadContract({
     contractName: "ETHRwandaHackathonOnboard",
     functionName: "getIsNumberRegistered",
-    args: [formData.phone],
+    args: [BigInt(formData.phone)],
     watch: true,
   });
 

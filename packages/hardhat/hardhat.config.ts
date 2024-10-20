@@ -33,7 +33,7 @@ const config: HardhatUserConfig = {
       },
     ],
   },
-  defaultNetwork: "localhost",
+  defaultNetwork: "base",
   namedAccounts: {
     deployer: {
       // By default, it will take the first Hardhat account as the deployer
@@ -98,7 +98,7 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     base: {
-      url: "https://mainnet.base.org",
+      url: `https://base-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
       accounts: [deployerPrivateKey],
     },
     baseSepolia: {

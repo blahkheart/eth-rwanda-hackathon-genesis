@@ -56,7 +56,7 @@ function InitializeHackerProfile() {
 
       // Sign the typed data
       const signature = await signer.signTypedData(domain, types, message);
-      console.log("signature", signature);
+
       setSignature(signature);
       notification.success("Signature generated successfully");
     } catch (error) {

@@ -1,26 +1,26 @@
 {
   "University": {
-    "address": "0x0000000000000000000000000000000000000000",
-    "description": "For current students and recent graduates"
+    "address": "0x0324925f766efa7f3051a0fdf07f40c33d945c1d",
+    "description": "Current students and recent graduates"
   },
   "HK": {
-    "address": "0x0000000000000000000000000000000000000000",
+    "address": "0xbe21485102df6729e8480af704be663fa961709e",
     "description": "Hackathon veterans with proven track records"
   },
   "Free Agent": {
-    "address": "0x0000000000000000000000000000000000000000",
+    "address": "0x90996f71655e1d396719271d1d7e392bf30cb3fc",
     "description": "Independent developers looking to join a team"
   },
   "Professional": {
-    "address": "0x0000000000000000000000000000000000000000",
+    "address": "0x62774364cfdf2db5e4f41d076e0c4127f1c67432",
     "description": "Experienced developers from the industry"
   },
   "Tribe": {
-    "address": "0x0000000000000000000000000000000000000000",
+    "address": "0x394911542decfa11a232d0451e55f1b3ec4f830d",
     "description": "Established teams ready to tackle challenges"
   },
   "xPat": {
-    "address": "0x0000000000000000000000000000000000000000",
+    "address": "0x7baedb3972431fc33efd116fcb131b26ae3ad7ba",
     "description": "International participants bringing global perspectives"
   }
 }

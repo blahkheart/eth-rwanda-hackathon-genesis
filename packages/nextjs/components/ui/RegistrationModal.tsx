@@ -38,7 +38,7 @@ export function RegistrationModal({ isOpen, onClose, selectedClass }: Registrati
   const [isSuccess, setIsSuccess] = useState(false);
   const isRegistrationWithEmailSaved = useIsEmailRegistered(hackers, formData.email);
   const isRegistrationWithNumberSaved = useIsPhoneNumberRegistered(hackers, formData.phone);
-
+  console.log("Hackers:::", hackers);
   const { data: isEmailRegistered, isLoading } = useScaffoldReadContract({
     contractName: "ETHRwandaHackathonOnboard",
     functionName: "getIsEmailRegistered",

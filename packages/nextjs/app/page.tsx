@@ -2,108 +2,47 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-// import Link from "next/link";
 import type { NextPage } from "next";
 import { RegistrationModal } from "~~/components/ui/RegistrationModal";
+import { RegistrationsClosedModal } from "~~/components/ui/RegistrationsClosedModal";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadContract";
 import { useGlobalState } from "~~/services/store/store";
 
-// import { Address } from "~~/components/scaffold-eth";
-
 const Home: NextPage = () => {
-  // const { address: connectedAddress } = useAccount();
   const [selectedClass, setSelectedClass] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isOwner, setIsOwner] = useState(false); // This should be determined by checking the connected address
+  const [isClosedModalOpen, setIsClosedModalOpen] = useState(false);
   const { classData, setHackerClass, setLockAddress } = useGlobalState();
 
+  const { data: areRegistrationsOpen } = useScaffoldReadContract({
+    contractName: "ETHRwandaHackathonOnboard",
+    functionName: "getAreRegistrationsOpen",
+  });
+
   useEffect(() => {
-    const defaultClass = "University"; // Example default class
+    const defaultClass = "University";
     if (classData[defaultClass]) {
       setHackerClass(defaultClass);
       setLockAddress(classData[defaultClass].address);
     }
-    setIsOwner(false);
   }, [classData, setHackerClass, setLockAddress]);
 
   const openModal = (classType: string) => {
-    setSelectedClass(classType);
-    setHackerClass(classType);
-    setLockAddress(classData[classType].address);
-    setIsModalOpen(true);
+    if (areRegistrationsOpen) {
+      setSelectedClass(classType);
+      setHackerClass(classType);
+      setLockAddress(classData[classType].address);
+      setIsModalOpen(true);
+    } else {
+      setIsClosedModalOpen(true);
+    }
   };
 
   return (
     <>
       <div className="min-h-screen bg-green-50">
         <main>
-          {/* New Jumbotron Section */}
-          <div
-            className="relative h-screen bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage: "url('/ETH-Rwanda-Banner.jpeg')" }}
-          >
-            <div className="absolute inset-0 bg-black opacity-50"></div>
-            <div className="relative z-10 text-center text-white">
-              <h1 className="text-6xl font-bold mb-4  text-gray-200">ETH RWANDA HACKATHON</h1>
-              <p className="mt-12 text-4xl font-extrabold ">GENESIS</p>
-              {/* Action Buttons */}
-              <div className="flex mt-32 justify-center space-x-8">
-                {/* Ethereum Logo */}
-                <svg className="w-16 h-16" viewBox="0 0 784.37 1277.39" xmlns="http://www.w3.org/2000/svg">
-                  <g>
-                    <polygon
-                      fill="#ffffff"
-                      fillRule="nonzero"
-                      points="392.07,0 383.5,29.11 383.5,873.74 392.07,882.29 784.13,650.54 "
-                    />
-                    <polygon
-                      fill="#ffffff"
-                      fillRule="nonzero"
-                      points="392.07,0 -0,650.54 392.07,882.29 392.07,472.33 "
-                    />
-                    <polygon
-                      fill="#ffffff"
-                      fillRule="nonzero"
-                      points="392.07,956.52 387.24,962.41 387.24,1263.28 392.07,1277.38 784.37,724.89 "
-                    />
-                    <polygon fill="#ffffff" fillRule="nonzero" points="392.07,1277.38 392.07,956.52 -0,724.89 " />
-                    <polygon fill="#ffffff" fillRule="nonzero" points="392.07,882.29 784.13,650.54 392.07,472.33 " />
-                    <polygon fill="#ffffff" fillRule="nonzero" points="0,650.54 392.07,882.29 392.07,472.33 " />
-                  </g>
-                </svg>
-                {/* Smart Contract Icon */}
-                <svg
-                  className="w-16 h-16"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  ></path>
-                </svg>
-                {/* Blockchain Icon */}
-                <svg
-                  className="w-16 h-16"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-
+          {/* Existing content */}
           <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
@@ -148,14 +87,7 @@ const Home: NextPage = () => {
         </main>
 
         <RegistrationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedClass={selectedClass} />
-
-        {isOwner && (
-          <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg">
-            <h4 className="text-lg font-medium text-gray-900 mb-2">Admin Settings</h4>
-            <p className="text-sm text-gray-600 mb-2">Set NFT addresses for each class</p>
-            {/* Add input fields for setting NFT addresses */}
-          </div>
-        )}
+        <RegistrationsClosedModal isOpen={isClosedModalOpen} onClose={() => setIsClosedModalOpen(false)} />
       </div>
     </>
   );

@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import type { NextPage } from "next";
+import { useAccount } from "wagmi";
+import { CheckInForm } from "~~/components/ui/CheckIn";
+import CountdownTimer from "~~/components/ui/CountDownTimer";
 import { RegistrationModal } from "~~/components/ui/RegistrationModal";
 import { RegistrationsClosedModal } from "~~/components/ui/RegistrationsClosedModal";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadContract";
@@ -12,12 +15,26 @@ const Home: NextPage = () => {
   const [selectedClass, setSelectedClass] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClosedModalOpen, setIsClosedModalOpen] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+
   const { classData, setHackerClass, setLockAddress } = useGlobalState();
+  const { address: connectedAddress } = useAccount();
 
   const { data: areRegistrationsOpen, isLoading } = useScaffoldReadContract({
     contractName: "ETHRwandaHackathonOnboard",
     functionName: "getAreRegistrationsOpen",
   });
+
+  const { data: ownerAddress } = useScaffoldReadContract({
+    contractName: "ETHRwandaHackathonOnboard",
+    functionName: "owner",
+  });
+
+  useEffect(() => {
+    if (connectedAddress && ownerAddress) {
+      setIsOwner(connectedAddress.toLowerCase() === ownerAddress.toLowerCase());
+    }
+  }, [connectedAddress, ownerAddress]);
 
   useEffect(() => {
     const defaultClass = "University";
@@ -120,6 +137,14 @@ const Home: NextPage = () => {
                 Join us for a symbolic event in the development of the Ethereum ecosystem in Rwanda. Learn, build, and
                 shape the future of blockchain technology.
               </p>
+            </div>
+            <div className="flex items-center justify-centerp-4 flex-col">
+              <CountdownTimer onComplete={() => console.log("Timer completed!")} />
+              {isOwner && (
+                <div className="mt-2 pt-1">
+                  <CheckInForm endpoint="/api/checkin/inperson" />
+                </div>
+              )}
             </div>
             {isLoading ? (
               <div className="flex justify-center items-center h-screen">

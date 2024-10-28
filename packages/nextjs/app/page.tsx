@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { CheckInForm } from "~~/components/ui/CheckIn";
-import CountdownTimer from "~~/components/ui/CountDownTimer";
+import { CountdownTimer } from "~~/components/ui/CountDownTimer";
 import { RegistrationModal } from "~~/components/ui/RegistrationModal";
 import { RegistrationsClosedModal } from "~~/components/ui/RegistrationsClosedModal";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadContract";
@@ -139,7 +139,7 @@ const Home: NextPage = () => {
               </p>
             </div>
             <div className="flex items-center justify-centerp-4 flex-col">
-              <CountdownTimer onComplete={() => console.log("Timer completed!")} />
+              <CountdownTimer initialSeconds={0} />
               {isOwner && (
                 <div className="mt-2 pt-1">
                   <CheckInForm endpoint="/api/checkin/inperson" />

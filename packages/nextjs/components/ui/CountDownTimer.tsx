@@ -3,55 +3,35 @@
 import { useEffect, useState } from "react";
 import { CheckInForm } from "./CheckIn";
 
-type CountdownTimerProps = {
-  onComplete?: () => void;
-};
+interface CountdownTimerProps {
+  initialSeconds: number;
+}
 
-export default function CountdownTimer({ onComplete }: CountdownTimerProps) {
-  const calculateInitialTime = (): number => {
-    const now = new Date();
-    const target = new Date();
-    target.setHours(15, 0, 0, 0); // Set target time to 2 PM today
-
-    const timeDifference = target.getTime() - now.getTime();
-    const initialTimeInSeconds = Math.max(0, Math.floor(timeDifference / 1000));
-
-    return initialTimeInSeconds;
-  };
-
-  const [timeLeft, setTimeLeft] = useState(calculateInitialTime());
+export function CountdownTimer({ initialSeconds }: CountdownTimerProps) {
+  const [remainingSeconds, setRemainingSeconds] = useState(initialSeconds);
 
   useEffect(() => {
-    if (timeLeft <= 0) {
-      onComplete?.();
-      return;
-    }
+    if (remainingSeconds <= 0) return;
 
-    const timer = setInterval(() => {
-      setTimeLeft(prevTime => prevTime - 1);
+    const intervalId = setInterval(() => {
+      setRemainingSeconds(prev => prev - 1);
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [timeLeft, onComplete]);
+    return () => clearInterval(intervalId);
+  }, [remainingSeconds]);
 
-  const formatTime = (time: number): { hours: string; minutes: string; seconds: string } => {
-    if (isNaN(time) || time < 0) return { hours: "00", minutes: "00", seconds: "00" };
-
-    const hours = Math.floor(time / 3600);
-    const minutes = Math.floor((time % 3600) / 60);
-    const seconds = time % 60;
-    return {
-      hours: hours.toString().padStart(2, "0"),
-      minutes: minutes.toString().padStart(2, "0"),
-      seconds: seconds.toString().padStart(2, "0"),
-    };
+  const formatTime = (_seconds: number) => {
+    const hours = Math.floor(_seconds / 3600);
+    const minutes = Math.floor((_seconds % 3600) / 60);
+    const seconds = _seconds % 60;
+    return { hours, minutes, seconds };
   };
 
-  const { hours, minutes, seconds } = formatTime(timeLeft);
+  const { hours, minutes, seconds } = formatTime(remainingSeconds);
 
   return (
     <div className="w-full max-w-2xl mx-auto overflow-hidden">
-      {timeLeft > 0 ? (
+      {remainingSeconds > 0 ? (
         <div className="p-6 sm:p-10">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Online Check-in closes in </h2>
           <div className="flex justify-center items-center space-x-4 sm:space-x-8">
